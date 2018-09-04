@@ -15,9 +15,9 @@ RUN apk add --update \
         docker \
         openrc \
         shadow \
-        vim \
     && rc-update add docker boot \
-    && usermod -aG docker jenkins
+    && usermod -aG docker jenkins \
+    && rm -rf /var/cache/apk/*
 
 # Jenkins Plugins List
 COPY plugins.txt /usr/share/jenkins/ref/plugins/

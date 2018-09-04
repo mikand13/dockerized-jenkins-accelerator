@@ -28,7 +28,8 @@ RUN apk add --update \
         openjdk8-jre \
         util-linux \
     && rc-update add docker boot \
-    && rc-update add sshd
+    && rc-update add sshd \
+    && rm -rf /var/cache/apk/*
 
 # Jenkins User Config
 

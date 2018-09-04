@@ -3,7 +3,8 @@ FROM nginx:alpine
 LABEL maintainer="anderm@netcompany.com"
 
 # Install curl
-RUN apk add --update curl
+RUN apk add --update curl \
+    && rm -rf /var/cache/apk/*
 
 COPY certs/server.crt /etc/nginx/server.crt
 COPY certs/server.key /etc/nginx/server.key
