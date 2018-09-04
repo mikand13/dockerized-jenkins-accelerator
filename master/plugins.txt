@@ -1,0 +1,10 @@
+credentials
+matrix-auth
+scm-sync-configuration
+monitoring
+groovy
+blueocean
+ssh-agent
+greenballs
+nodejs
+jdk-tool
