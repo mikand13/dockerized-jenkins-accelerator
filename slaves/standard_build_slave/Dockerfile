@@ -31,7 +31,6 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/*
 
 # Jenkins User Config
-
 RUN groupadd -g ${gid} ${group} \
     && useradd -c "Jenkins user" -d $HOME -u ${uid} -g ${gid} -m ${user} \
     && usermod -aG docker jenkins
