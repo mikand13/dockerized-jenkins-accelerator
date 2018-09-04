@@ -1,0 +1,81 @@
+version: '3.7'
+
+networks:
+  backend:
+
+services:
+  jenkins:
+    image: "nc/jenkins-master-dev:${JENKINS_IMAGE_VERSION:-latest}"
+    shm_size: '40gb'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      backend:
+    autodestroy: always
+    deployment_strategy: high_availability
+    labels:
+      com.netcompany.dockerized.jenkins: "POC"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5m
+      placement:
+        constraints: [node.labels.type == master]
+  jenkins-nginx:
+    image: "nc/jenkins-master-nginx-dev:${JENKINS_NGINX_IMAGE_VERSION:-latest}"
+    depends_on:
+      - jenkins
+    networks:
+      backend:
+    ports:
+      - "80:80"
+      - "443:443"
+    autodestroy: always
+    deployment_strategy: high_availability
+    labels:
+      com.netcompany.dockerized.jenkins.nginx: "POC"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5m
+      placement:
+        constraints: [node.labels.type == master]
+  jenkins-build-slave:
+    image: "nc/jenkins-standard-build-slave-dev:${JENKINS_STANDARD_SLAVE_IMAGE_VERSION:-latest}"
+    shm_size: '20gb'
+    depends_on:
+      - jenkins
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      backend:
+    autodestroy: always
+    labels:
+      com.netcompany.dockerized.jenkins.build.slave: "POC"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5m
+      placement:
+        constraints: [node.labels.type == slave]
+  jenkins-deploy-slave:
+    image: "nc/jenkins-deploy-slave-dev:${JENKINS_DEPLOY_SLAVE_IMAGE_VERSION:-latest}"
+    depends_on:
+      - jenkins
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      backend:
+    autodestroy: always
+    labels:
+      com.netcompany.dockerized.jenkins.deploy.slave: "POC"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5m
+      placement:
+        constraints: [node.labels.type == slave]

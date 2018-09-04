@@ -47,8 +47,7 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar \
         https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/slave.jar \
-    && chmod 644 /home/jenkins/jenkins-cli.jar \
-    && chmod -R a+rwx /opt/tg
+    && chmod 644 /home/jenkins/jenkins-cli.jar
 
 COPY run.sh /home/jenkins/run.sh
 

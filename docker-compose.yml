@@ -1,19 +1,19 @@
-version: '3.6'
+version: '3.7'
 
 networks:
   backend:
 
 services:
   jenkins:
-    image: nc/jenkins-master-dev:latest
+    image: "nc/jenkins-master-dev:${JENKINS_IMAGE_VERSION:-latest}"
     build:
       context: ./master
       dockerfile: Dockerfile
       args:
-        jenkins_master_pass: 123
-        jenkins_slave_port: 50000
-        jenkins_slave_pass: 123
-        jenkins_config_repo_provider: git
+        jenkins_master_pass: "${JENKINS_MASTER_PASS:-123}"
+        jenkins_slave_port: "${JENKINS_SLAVE_PORT:-50000}"
+        jenkins_slave_pass: "${JENKINS_SLAVE_PASS:-123}"
+        jenkins_config_repo_provider: "${JENKINS_CONFIG_REPO_PROVIDER:-git}"
         jenkins_config_repo_url: git@github.com:mikand13/dockerized-jenkins-accelerator-config.git
     shm_size: '40gb'
     volumes:
@@ -22,7 +22,7 @@ services:
       backend:
     restart: always
   jenkins-nginx:
-    image: nc/jenkins-master-nginx-dev:latest
+    image: "nc/jenkins-master-nginx-dev:${JENKINS_NGINX_IMAGE_VERSION:-latest}"
     build:
       context: ./nginx
       dockerfile: Dockerfile
@@ -35,15 +35,15 @@ services:
       - "443:443"
     restart: always
   jenkins-build-slave:
-    image: nc/jenkins-standard-build-slave-dev:latest
+    image: "nc/jenkins-standard-build-slave-dev:${JENKINS_STANDARD_SLAVE_IMAGE_VERSION:-latest}"
     build:
       context: slaves/standard_build_slave
       dockerfile: Dockerfile
       args:
-        jenkins_slave_pass: 123
+        jenkins_slave_pass: "${JENKINS_SLAVE_PASS:-123}"
         agent_name: standard_build
-        cli_url: http://jenkins:8080
-        jnlp_user: jenkins-slave
+        cli_url: "${JENKINS_CLI_URL:-http://jenkins:8080}"
+        jnlp_user: "${JENKINS_JNLP_USER:-jenkins-slave}"
         labels: standard_build
     shm_size: '20gb'
     depends_on:
@@ -54,15 +54,15 @@ services:
       backend:
     restart: always
   jenkins-deploy-slave:
-    image: nc/jenkins-deploy-slave-dev:latest
+    image: "nc/jenkins-deploy-slave-dev:${JENKINS_DEPLOY_SLAVE_IMAGE_VERSION:-latest}"
     build:
       context: slaves/deploy_slave
       dockerfile: Dockerfile
       args:
-        jenkins_slave_pass: 123
+        jenkins_slave_pass: "${JENKINS_SLAVE_PASS:-123}"
         agent_name: deploy
-        cli_url: http://jenkins:8080
-        jnlp_user: jenkins-slave
+        cli_url: "${JENKINS_CLI_URL:-http://jenkins:8080}"
+        jnlp_user: "${JENKINS_JNLP_USER:-jenkins-slave}"
         labels: deploy
     depends_on:
       - jenkins
