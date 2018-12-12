@@ -49,3 +49,7 @@ docker-compose up -d
 ```
 docker stack deploy docker-stack.yml
 ```
+
+## Scaling slaves
+
+Increase scaling count or build slave according to needs, they will connect automatically. When they are shutdown, they are automatically removed from the master. So you can safely scale them based on hw needs.
