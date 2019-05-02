@@ -53,3 +53,7 @@ docker stack deploy docker-stack.yml
 ## Scaling slaves
 
 Increase scaling count or build slave according to needs, they will connect automatically. When they are shutdown, they are automatically removed from the master. So you can safely scale them based on hw needs.
+
+## Notes
+
+Beware issues with windows EOL for config files, ensure unix style endings in your git repo before runnning the examples.
